@@ -15,6 +15,8 @@ PADDLE_SPEED = 200
 function love.load()
     love.graphics.setDefaultFilter('nearest')
 
+    love.window.setTitle('Pong')
+
     math.randomseed(os.time())
 
     smallFont = love.graphics.newFont('font.ttf', 16)
@@ -28,6 +30,9 @@ function love.load()
         resizable = false,
         vsync = true
     })
+
+    player1Score = 0
+    player2Score = 0
 
     player1 = Paddle(10, 30, 5, 20)
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 20, 5, 20)
@@ -119,5 +124,13 @@ function love.draw()
 
     ball:render()
 
+    displayFPS()
+
     push:apply('end')
+end
+
+function displayFPS()
+    love.graphics.setFont(smallFont)
+    love.graphics.setColor(0, 255/255, 0, 255/255)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
 end
