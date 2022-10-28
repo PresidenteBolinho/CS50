@@ -29,11 +29,8 @@ function love.load()
         vsync = true
     })
 
-    player1Score = 0
-    player1Y = 30
-
-    player2Score = 0
-    player2Y = VIRTUAL_HEIGHT - 50
+    player1 = Paddle(10, 30, 5, 20)
+    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 20, 5, 20)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 5, 5)
 
@@ -42,20 +39,27 @@ end
 
 function love.update(dt)
     if love.keyboard.isDown('w') then
-        player1Y = math.max(0, player1Y + -PADDLE_SPEED * dt)
+        player1.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown('s') then
-        player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
+        player1.dy = PADDLE_SPEED
+    else
+        player1.dy = 0
     end
 
     if love.keyboard.isDown('up') then
-        player2Y = math.max(0, player2Y + -PADDLE_SPEED * dt)
+        player2.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown('down') then
-        player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
+        player2.dy = PADDLE_SPEED
+    else
+        player2.dy = 0
     end
 
     if gameState == 'play' then
         ball:update(dt)
     end
+
+    player1:update(dt)
+    player2:update(dt)
 end
 
 function love.keypressed(key)
@@ -109,9 +113,9 @@ function love.draw()
         VIRTUAL_HEIGHT / 3
     )
 
-    love.graphics.rectangle('fill', 10, player1Y, 5, 20)
+    player1:render()
 
-    love.graphics.rectangle('fill', VIRTUAL_WIDTH - 15, player2Y, 5, 20)
+    player2:render()
 
     ball:render()
 
