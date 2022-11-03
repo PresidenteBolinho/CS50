@@ -188,7 +188,7 @@ function love.update(dt)
 
     -- Updating players
     player1:update(dt)
-    player2:update(dt)
+    player2:IA(dt, ball)
 end
 
 -- Waiting for a key to be pressed at any time during the game
