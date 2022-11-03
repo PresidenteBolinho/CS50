@@ -1,5 +1,7 @@
+-- Import Class library to OOP
 Ball = Class{}
 
+-- Function that init the class
 function Ball:init(x, y, width, height)
     self.x = x
     self.y = y
@@ -10,6 +12,8 @@ function Ball:init(x, y, width, height)
     self.dx = 0
 end
 
+-- Function to create AABB collide
+-- The AABB collide is a check on bounding boxes aligned with alix, if true, a collision occurred
 function Ball:collides(paddle)
     if self.x > paddle.x + paddle.width or paddle.x > self.x + self.width then
         return false
@@ -22,6 +26,7 @@ function Ball:collides(paddle)
     return true
 end
 
+-- Reset the ball configuration to appear in the central window
 function Ball:reset()
     self.x = VIRTUAL_WIDTH / 2 - 2
     self.y = VIRTUAL_HEIGHT / 2 - 2
@@ -29,11 +34,13 @@ function Ball:reset()
     self.dx = 0
 end
 
+-- Updating ball position
 function Ball:update(dt)
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt
 end
 
+-- Render ball on screen
 function Ball:render()
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end
