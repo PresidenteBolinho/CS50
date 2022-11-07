@@ -3,9 +3,7 @@ push = require 'push'
 Class = require 'class'
 
 require 'Bird'
-
 require 'Pipe'
-
 require 'PipePair'
 
 require 'StateMachine'
@@ -39,6 +37,8 @@ local scrolling = true
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    math.randomseed(os.time())
+
     love.window.setTitle('Fifty Bird')
 
     smallFont = love.graphics.newFont('font.ttf', 8)
@@ -52,6 +52,18 @@ function love.load()
         resizable = true,
         vsync = false
     })
+
+    sounds = {
+        ['jump'] = love.audio.newSource('jump.wav', 'static'),
+        ['explosion'] = love.audio.newSource('explosion.wav', 'static'),
+        ['hurt'] = love.audio.newSource('hurt.wav', 'static'),
+        ['score'] = love.audio.newSource('score.wav', 'static'),
+
+        ['music'] = love.audio.newSource('marios_way.mp3', 'static')
+    }
+
+    sounds['music']:setLooping(true)
+    sounds['music']:play()
 
     gStateMachine = StateMachine {
         ['title'] = function() return TitleScreenState() end,
@@ -86,10 +98,12 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
-        % BACKGROUND_LOOPING_POINT
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
-        % VIRTUAL_WIDTH
+    if scrolling then
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt)
+            % BACKGROUND_LOOPING_POINT
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
+            % VIRTUAL_WIDTH 
+    end
     
     gStateMachine:update(dt)
     
