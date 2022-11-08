@@ -5,6 +5,10 @@ O objetivo deste repositório é de documentar o meu progresso no curso de Gamed
 
 ## Projetos
 ### Pong
+Um jogo clássico, onde são dois jogadores em uma forma de ping pong. Ganha quem marcar 10 pontos primeiro.
+
+### Flappy Bird (Fifty Bird)
+Um jogo de pássaro onde você deve exercitar o seu reflexo ao fazer esse pássaro passar pela maior quantidade de canos possivel sem encostar nesses canos.
 
 ## Linguagem
 ### Lua

@@ -6,6 +6,13 @@ require 'Bird'
 
 require 'Pipe'
 
+require 'PipePair'
+
+require 'StateMachine'
+require 'states/BaseState'
+require 'states/PlayState'
+require 'states/TitleScreenState'
+
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
@@ -23,22 +30,33 @@ local GROUND_SCROLL_SPEED = 60
 
 local BACKGROUND_LOOPING_POINT = 413
 
-local bird = Bird()
+local GROUND_LOOPING_POINT = 514
 
-local pipes = {}
-
-local spawnTimer = 0
+local scrolling = true
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    love.window.setTitle('Flappy Bird')
+    love.window.setTitle('Fifty Bird')
+
+    smallFont = love.graphics.newFont('font.ttf', 8)
+    mediumFont = love.graphics.newFont('flappy.ttf', 14)
+    flappyFont = love.graphics.newFont('flappy.ttf', 28)
+    hugeFont = love.graphics.newFont('flappy.ttf', 56)
+    love.graphics.setFont(flappyFont)
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = true,
         vsync = false
     })
+
+    gStateMachine = StateMachine {
+        ['title'] = function() return TitleScreenState() end,
+        ['play'] = function() return PlayState() end
+    }
+
+    gStateMachine:change('title')
 
     love.keyboard.keysPressed = {}
 end
@@ -68,40 +86,20 @@ function love.update(dt)
         % BACKGROUND_LOOPING_POINT
     groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt)
         % VIRTUAL_WIDTH
-
-    spawnTimer = spawnTimer + dt
-
-    if spawnTimer > 2 then
-        table.insert(pipes, Pipe())
-        print('Added new pipe!')
-        spawnTimer = 0
-    end
-
-    bird:update(dt)
-
-    for k, pipe in pairs(pipes) do
-        pipe:update(dt)
-
-        if pipe.x < -pipe.width then
-            table.remove(pipes, k)
-        end
-    end
-
+    
+    gStateMachine:update(dt)
+    
     love.keyboard.keysPressed = {}
-end
+end 
 
 function love.draw()
     push:start()
     
     love.graphics.draw(background, -backgroundScroll, 0)
 
-    for k, pipe in pairs(pipes) do
-        pipe:render()
-    end
+    gStateMachine:render()
 
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)
-
-    bird:render()
 
     push:finish()
 end
