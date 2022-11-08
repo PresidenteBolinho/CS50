@@ -22,6 +22,10 @@ function love.load()
         ['particle'] = love.graphics.newImage('graphics/particle.png')
     }
 
+    gFrames = {
+        ['paddles'] = GenerateQuadsPaddles(gTextures['main'])
+    }
+
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         resizable = true,
@@ -47,7 +51,8 @@ function love.load()
     }
 
     gStateMachine = StateMachine {
-        ['start'] = function() return StartState() end
+        ['start'] = function() return StartState() end,
+        ['play'] = function() return PlayState() end
     }
     gStateMachine:change('start')
 
@@ -56,12 +61,6 @@ end
 
 function love.resize(w, h)
     love.resize(w, h)
-end
-
-function love.keypressed(key)
-    if key == 'escape' then
-        love.event.quit()
-    end
 end
 
 function love.update(dt)
